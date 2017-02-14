@@ -1,23 +1,24 @@
-
+//экран
 function Rect(color, x, y, width, height) {
     this.color = color; 
     this.x = x; 
     this.y = y; 
     this.width = width; 
     this.height = height; 
-    this.draw = function()
+    this.draw = function() 
     {
         context.fillStyle = this.color;
-		context.fillRect(this.x, this.y, this.width+100, this.height);
+		context.fillRect(this.x, this.y, this.width, this.height);
     };
 }
 
+//платформа
 function Platform(x, y, width, height) {	
     this.color = "#fff"; 
     this.x = x; 
-    this.y = y; 	
+    this.y = y; 		
     this.width = width; 
-    this.height = height;
+    this.height = height; 
 	this.longPlatform=1;
     this.draw = function() 
     {
@@ -26,16 +27,17 @@ function Platform(x, y, width, height) {
     };	
 }
 
-function playerMove(e) {
+//позициЯ курсора
+function cursorPosit(e) {
 	player.x2=e.pageX-7;
-	bonus.y=e.pageY-7;
 	if(player.x2>640)
 		player.x2=640;
 }
 
-function position(){
+//подсчЮт позиции экрана
+function screenPos(){
 	if(bonus.widthCell*40-game.width>0){		
-		if(player.x2<120){
+		if(player.x2<120){//сдвиг экрана влева
 			if(bonus.visible<-(game.width-bonus.widthCell*40)/2){				
 				f=(120-player.x2)/200;
 				bonus.visible=(Math.floor((bonus.visible+f)*1000))/1000;
@@ -44,18 +46,20 @@ function position(){
 				bonus.visible=-(game.width-bonus.widthCell*40)/2;				
 			}
 		}
-		if(player.x2>game.width-120){
+		if(player.x2>game.width-120){//сдвиг экрана вправо
 			if(bonus.visible>(game.width-bonus.widthCell*40)/2){
 				f=(game.width-120-player.x2)/200;
-				if(f<-0.6)
-					f=-0.6;
 				bonus.visible=(Math.floor((bonus.visible+f)*1000))/1000;
 			}		
 			if(bonus.visible<(game.width-bonus.widthCell*40)/2){
 				bonus.visible=(game.width-bonus.widthCell*40)/2;
 			}
 		}
-	}
+	}	
+}
+
+//подсчЮт скорости платформы
+function speedPlatform(){
 	if(player.x2<10){
 		player.x2=10;		
 	}
@@ -90,14 +94,19 @@ function position(){
 	}	
 }
 
+//направление шарика после соприкосновениЯ с платформой
 function direction(i){	
 	dist=Math.round((balls[i].x-player.x+bonus.visible)*1000)/1000; 
+	//настройка места касание
+	//слева
 	if(dist<=0){
+		//бок
 		if(balls[i].y>=player.y && balls[i].y<=player.y+player.height){
 			if(balls[i].vX>0){
 				balls[i].vX=-balls[i].vX;
 			}		
 		}
+		//угол
 		dist2 =Math.sqrt(Math.pow(player.x-balls[i].x-bonus.visible,2)+Math.pow(player.y-balls[i].y,2));		
 		if(dist2-0.5<=balls[i].radius*balls[i].size){
 			if(balls[i].vX<=0){
@@ -115,12 +124,15 @@ function direction(i){
 		}		
 		return;
 	}
+	//справа
 	if(dist>=player.width*player.longPlatform){
+		//бок
 		if(balls[i].y>=player.y && balls[i].y<=player.y+player.height){
 			if(balls[i].vX<0){
 			balls[i].vX=-balls[i].vX;
 			}			
 		}
+		//угол
 		dist2=Math.sqrt(Math.pow(player.x+player.width*player.longPlatform-balls[i].x-bonus.visible,2)+Math.pow(player.y-balls[i].y,2));
 		if(dist2-0.5<=balls[i].radius*balls[i].size){
 			if(balls[i].vX>=0){
@@ -138,7 +150,9 @@ function direction(i){
 		}
 		return;
 	}
+	//настройка отражения
 	if(balls[i].vY>=0){
+		//центр
 		if(dist>=player.width*player.longPlatform/2-1 && dist<=player.width*player.longPlatform/2+1){
 			balls[i].vX=0;
 			balls[i].vY=Math.round((-Math.sqrt(8))*1000)/1000;
@@ -146,6 +160,7 @@ function direction(i){
 				balls[0].vY=balls[0].vY;
 			return;
 		}
+		//леваЯ часть
 		if(dist<player.width*player.longPlatform/2 && dist>0){			
 			dist2=Math.floor((player.width*player.longPlatform/2)-dist);			
 			balls[i].vX=-dist2/(player.width*player.longPlatform/2)*2830;
@@ -154,6 +169,7 @@ function direction(i){
 			balls[i].vY=Math.floor(balls[i].vY)/1000;
 			return;
 		}
+		//праваЯ часть
 		if(dist>player.width*player.longPlatform/2){			
 			dist2=Math.floor(dist-player.width*player.longPlatform/2);
 			balls[i].vX=dist2/(player.width*player.longPlatform/2)*2830;
@@ -163,23 +179,24 @@ function direction(i){
 			return;
 		}
 	}
+	
 }
 
 function Ball(x, y, vX, vY, radius, speed, size) {
-    this.color = "#fff"; 
+    this.color = "#fff";
     this.x = x; 
     this.y = y; 
 	this.vX = vX; 
     this.vY = vY; 
 	this.radius = radius;
-	this.speed = speed;  
+	this.speed = speed;   
 	this.size=size;
 	this.kasaniy =0;	
 	this.activ=false;
 	this.through=false;   
     this.draw = function() 
     {
-		if(this.speed>2.9){			
+		if(this.speed>2.9){//первращение в супер шар			
 			if(this.size>0.8){
 				this.size-=0.001;
 			}
@@ -200,10 +217,10 @@ function directionBall(){
 //function explosion();
 
 function Cell(x, y, width, height, value, displacement){	
-	this.x = x; 
-    this.y = y; 
-    this.width = width; 
-    this.height = height; 
+	this.x = x; // координата х
+    this.y = y; // координата у	
+    this.width = width; // ширина
+    this.height = height; // высота
 	this.value = value;
 	this.score=value==10 ? 30 : value*5;
 	this.displacement = displacement;
@@ -219,7 +236,7 @@ function Cell(x, y, width, height, value, displacement){
 			case 3:
 				context.fillStyle = '#888';
 				break
-			case 10:
+			case 10://не ламается
 				context.fillStyle = '#f00';
 				break
 		}	
@@ -227,11 +244,8 @@ function Cell(x, y, width, height, value, displacement){
 	};	
 }
 
-function obstacle(i,j){ 
-
-	if(bonus.y>cells[j].y && bonus.y<cells[j].y+cells[j].height && player.x2-bonus.visible>cells[j].x && player.x2-bonus.visible<cells[j].x+cells[j].width){
-		bonus.x3=+j+1;				
-	}	
+//Ќаправление после касаниЯ с Ячейкой
+function obstacle(i,j){ //to do			
 	if(balls[i].x+balls[i].radius*balls[i].size>=cells[j].x && balls[i].x-balls[i].radius<=cells[j].x+cells[j].width && balls[i].y+balls[i].radius*balls[i].size>=cells[j].y && balls[i].y-balls[i].radius*balls[i].size<=cells[j].y+cells[j].height){
 		if(balls[i].speed>2.9){
 			cells[j].value=0;
@@ -239,6 +253,7 @@ function obstacle(i,j){
 			return false;
 		}
 		dist= balls[i].x-cells[j].x;
+		//касание сверху или снизу
 		if(dist>=0 && dist<=cells[j].width){				
 			balls[i].vY=-balls[i].vY;				
 			return true;
@@ -310,6 +325,7 @@ function obstacle(i,j){
 				}
 			}
 		}
+		//касание слева 
 		flag=true;
 		if(window.cells[+j-1]){
 			if(cells[+j-1].y==cells[j].y && cells[+j-1].value!=0){
@@ -317,6 +333,7 @@ function obstacle(i,j){
 			}
 		}
 		if(dist<0 && flag){
+			//бок
 			if(balls[i].y>=cells[j].y && balls[i].y<=cells[j].y+cells[j].height){					
 				if(balls[i].vX>0){
 					balls[i].vX=-balls[i].vX;
@@ -328,7 +345,8 @@ function obstacle(i,j){
 					return true;
 				}
 				return true;
-			}			
+			}
+			//верхний угол			
 			if(upLeft){
 				dist2=Math.sqrt(Math.pow(cells[j].x-balls[i].x,2)+Math.pow(cells[j].y-balls[i].y,2));
 				if(dist2<=balls[i].radius*balls[i].size){
@@ -346,6 +364,7 @@ function obstacle(i,j){
 					return true;
 				}
 			}
+			//нижний угол
 			if(downLeft){
 				dist2=Math.sqrt(Math.pow(cells[j].x-balls[i].x,2)+Math.pow(cells[j].y+cells[j].height-balls[i].y,2));			
 				if(dist2<=balls[i].radius*balls[i].size){
@@ -370,7 +389,9 @@ function obstacle(i,j){
 			}			
 			return false;
 		}			
+		//касание справа
 		if(dist>cells[j].width){
+			//бок
 			if(balls[i].y>=cells[j].y && balls[i].y<=cells[j].y+cells[j].height){
 				if(window.cells[+j+1]){
 					if(cells[+j+1].value!=0){
@@ -388,6 +409,7 @@ function obstacle(i,j){
 				}				
 				return true;
 			}
+			//верхний угол
 			if(upRight){
 				dist2=Math.sqrt(Math.pow(cells[j].x+cells[j].width-balls[i].x,2)+Math.pow(cells[j].y-balls[i].y,2));
 				if(dist2<=balls[i].radius*balls[i].size){	
@@ -412,6 +434,7 @@ function obstacle(i,j){
 					return true;
 				}
 			}
+			//нижний угол
 			if(downRight){
 				dist2=Math.sqrt(Math.pow(cells[j].x+cells[j].width-balls[i].x,2)+Math.pow(cells[j].y+cells[j].height-balls[i].y,2));
 				if(dist2<=balls[i].radius*balls[i].size){				
@@ -460,6 +483,7 @@ function Patron(color,x, y, width, height, value) {
     };
 }
 
+//генерациЯ пули
 function creaturePatron(){ 
 	if(bonus.ammunition>0){
 		if(bonus.ammunition<10){
@@ -522,6 +546,7 @@ function creaturePatron(){
 	}	
 }
 
+//попадание пулЯми
 function hitPatr(){ 
 	for(j in bullets){		
 	destruction=true;
@@ -547,10 +572,10 @@ function hitPatr(){
 
 function Variables(belay, life, ammunition, magnit, score){
 	this.color ="#ffd700";
-	this.belay=belay; 
+	this.belay=belay; //страховка
 	this.kasaniy=0;	
-	this.life = life; 
-	this.ammunition = ammunition;
+	this.life = life; //кол-во жизней
+	this.ammunition = ammunition;//количество выстрелов
 	this.score =score;
 	this.speed = 1;
 	this.timeSpeed=0;
@@ -564,21 +589,23 @@ function Variables(belay, life, ammunition, magnit, score){
 	this.draw = function()
 	{
 		context.globalAlpha = 1;
-		context.font= '10px sans-serif';
+		context.font= '12px sans-serif';
 		context.fillStyle = this.color;
 		context.fillRect(game.width, game.y, 100, game.height);
 		context.textBaseline = 'top';
 		context.fillStyle = '#000';	
-		context.fillText("speed = "+bonus.speed, game.width+5, 0);
-		context.fillText("vY = "+balls[0].vY, game.width+5, 10);
-		context.fillText("vX = "+balls[0].vX, game.width+5, 20);		
-		context.fillText("XP = "+bonus.life, game.width+5, 30);		
-		context.fillText("ammun = "+bonus.ammunition, game.width+5, 50);
-		context.fillText("x5 = "+player.x2, game.width+5, 60);
-		context.fillText("x4 = "+bonus.x4, game.width+5, 70);
-		context.fillText("kursor = "+bonus.x3, game.width+5, 80);
-		context.fillText("visible = "+bonus.visible, game.width+5, 90);
-		context.fillText("score = "+bonus.score, game.width+5, 110);
+		context.fillText("Complexity: "+bonus.speed, game.width+5, 0);
+				
+		context.fillText("XP "+bonus.life, game.width+5, 15);		
+		context.fillText("Ammun: "+bonus.ammunition, game.width+5, 30);
+		context.fillText("Score: "+bonus.score, game.width+5, 45);
+		//context.fillText("vY: "+balls[0].vY, game.width+5, 60);
+		//context.fillText("vX: "+balls[0].vX, game.width+5, 75);
+		//context.fillText("x5: "+player.x2, game.width+5, 90);
+		//context.fillText("x4: "+bonus.x4, game.width+5, 105);
+		//context.fillText("visible: "+bonus.visible, game.width+5, 120);
+		
+	
 	};
 }
 
@@ -600,10 +627,12 @@ function DownBonus(x,y,value, mode){
 				}
 				context.fillRect(this.x+bonus.visible, this.y, this.width,this.height);
 				break
+			//страховка +
 			case 2:			
 				context.fillStyle = '#CF0';
 				context.fillRect(this.x+bonus.visible, this.y, this.width,this.height);
-				break				
+				break		
+			//размер шарика	
 			case 3:
 				context.fillStyle='#FFF';
 				context.beginPath();
@@ -618,10 +647,12 @@ function DownBonus(x,y,value, mode){
 				context.arc(this.x+bonus.visible, this.y, this.height/2, 0 * Math.PI, 360 * Math.PI, true);
 				context.fill();
 				break
+			//количество выстрелов
 			case 4:
 				context.fillStyle='#F60';
 				context.fillRect(this.x+bonus.visible, this.y, this.width,this.height);
 				break
+			//доп жизнь
 			case 5:	
 				context.fillStyle='#FFF';
 				context.beginPath();
@@ -632,6 +663,7 @@ function DownBonus(x,y,value, mode){
 				context.arc(this.x+bonus.visible, this.y, this.height/2, 0 * Math.PI, 360 * Math.PI, true);
 				context.fill();
 				break
+			//доп шарик
 			case 6:
 				context.fillStyle='#aaa';
 				context.beginPath();
@@ -644,6 +676,7 @@ function DownBonus(x,y,value, mode){
 				context.fill();
 				context.globalAlpha = 1;
 				break
+			//камень
 			case 7:
 				context.fillStyle='#888';
 				context.beginPath();
@@ -655,12 +688,14 @@ function DownBonus(x,y,value, mode){
 }
 
 function check(){
+	//длинна платформы
 	if(player.longPlatform>1.5){
 		player.longPlatform=1.5;
 	}
 	if(player.longPlatform<0.5){
 		player.longPlatform=0.5;
 	}
+	//усткорение
 	if(bonus.speed>3){
 		bonus.speed=3;
 	}
@@ -674,6 +709,7 @@ function check(){
 		if(balls[i].speed<0.5){
 			balls[i].speed=0.5;
 		}	
+		//размер шараика
 		if(balls[i].size>1.3){
 			balls[i].size=1.3;
 		}
@@ -681,12 +717,14 @@ function check(){
 			balls[i].size=0.8;
 		}
 	}
+	//кол-во жизней
 	if(bonus.life>5){
 		bonus.life=5;
 	}
 	if(bonus.lift<-1){
 		bonus.life=-1;
 	}
+	//кол-во выстрелов
 	if(bonus.ammunition>15){
 		bonus.ammunition=15;
 	}
@@ -698,12 +736,13 @@ function check(){
 	}
 }
 probability=0;
-
+//выбор бонуса
 function selectBon(j){	
 	f=Math.floor(Math.random()*100);
 	if(f>40-probability&& f<70){
 		probability=0;
 		valueBon=Math.floor(Math.random()*100);		
+		//длинна платформы +
 		if(valueBon>-1 && valueBon<14){			
 			ots=Math.floor(Math.random()*100);
 			for(i in bonMas){
@@ -732,6 +771,7 @@ function selectBon(j){
 			}
 			return;
 		}
+		//страховка +
 		if(valueBon>13 && valueBon<30){			
 			for(i in bonMas){
 				if(bonMas[i].mode==0){
@@ -748,6 +788,7 @@ function selectBon(j){
 			}
 			return;
 		}
+		//размер шарика +
 		if(valueBon>29 && valueBon<44){
 			ots=Math.floor(Math.random()*100);		
 			for(i in bonMas){
@@ -776,6 +817,7 @@ function selectBon(j){
 			}
 			return;			
 		}
+		//количество выстрелов +
 		if(valueBon>43 && valueBon<58){			
 			for(i in bonMas){
 				if(bonMas[i].mode==0){
@@ -792,6 +834,7 @@ function selectBon(j){
 			}
 			return;			
 		}
+		//доп жизнь +
 		if(valueBon>57 && valueBon<72){
 			for(i in bonMas){
 				if(bonMas[i].mode==0){
@@ -808,8 +851,8 @@ function selectBon(j){
 			}
 			return;
 		}	
+		//доп шарик
 		if(valueBon>71 && valueBon<86){			
-			
 			for(i in bonMas){
 				if(bonMas[i].mode==0){
 					bonMas[i].mode=6;
@@ -826,6 +869,7 @@ function selectBon(j){
 			return;
 			
 		}
+		//камень
 		if(valueBon>85 && valueBon<100){
 			
 			for(i in bonMas){
@@ -841,8 +885,13 @@ function selectBon(j){
 				bonMas[bonus.fallBon]=new DownBonus(cells[j].x+cells[j].width/2, cells[j].y+cells[j].height/2,1,7);					
 				bonus.fallBon++;
 			}
-			return;			
+			return;
+			
 		}
+		//взрывной шар
+		
+		//магнит
+		//камень
 	}else{
 		if(probability<10){
 			 +probability++;
@@ -851,10 +900,15 @@ function selectBon(j){
 	}
 }
 
+//запись бонуса на счЮт играка
 function writeBon(i){
-	if(bonMas[i].x+bonMas[i].width>=player.x-bonus.visible && bonMas[i].x<=player.x-bonus.visible+player.width*player.longPlatform && bonMas[i].y+bonMas[i].height>=player.y && bonMas[i].y<=player.y+player.height){
+	if(bonMas[i].x+bonMas[i].width>=player.x-bonus.visible &&
+	bonMas[i].x<=player.x-bonus.visible+player.width*player.longPlatform &&
+	bonMas[i].y+bonMas[i].height>=player.y &&
+	bonMas[i].y<=player.y+player.height){
 		switch (bonMas[i].mode){
 			case 1:
+				//длинна платформы 
 				if(bonMas[i].value==1){
 					if(player.longPlatform<1.5){
 						player.x=player.x-player.width*0.5/2;
@@ -875,11 +929,13 @@ function writeBon(i){
 				}
 				bonMas[i].mode=0;
 				break
-			case 2:		
+			case 2:
+				//страховка				
 				bonus.belay=true;				
 				bonMas[i].mode=0;
 				break
 			case 3:
+				//размер шара
 				for(j in balls){
 					if(balls[j].speed<3){
 						if(bonMas[i].value>0 && balls[j].size<1.3){
@@ -897,10 +953,12 @@ function writeBon(i){
 				bonMas[i].mode=0;
 				break
 			case 4:
+				//выстрелы
 				bonus.ammunition+=3;
 				bonMas[i].mode=0;
 				break
 			case 5:
+				//доп жизнь
 				if(bonus.life<5){
 					bonus.life++;
 				}
@@ -943,7 +1001,7 @@ function writeBon(i){
 				}
 				bonMas[i].mode=0;
 				break
-			case 7:
+			case 7://камень
 				for(f in balls){
 					balls[f].activ=false;
 					bonus.activBal--;
@@ -953,15 +1011,18 @@ function writeBon(i){
 	}
 }
 
+//обновление расчЮтов
 function update() {	
 	if(!start){		
 		balls[0].x=player.x+player.width*player.longPlatform/2-bonus.visible; 
 		balls[0].y=player.y-balls[0].radius*balls[0].size;
 	}
 	checkBalls=0;
+	//рсчЮты с шариком
 	for(i in balls){
 		if(balls[i].activ){
 			if(bonus.widthCell*40>game.width){
+				//левая и правая стенка
 				if(balls[i].x-balls[i].radius*balls[i].size+balls[i].vX<(game.width-bonus.widthCell*40)/2){
 					balls[i].vX=-balls[i].vX;		
 				}
@@ -972,10 +1033,12 @@ function update() {
 				if(balls[i].x-balls[i].radius*balls[i].size+balls[i].vX<0 || balls[i].x+balls[i].radius*balls[i].size+balls[i].vX>game.width){
 					balls[i].vX=-balls[i].vX;		
 				}
-			}
+			}		
+			//верхняя стенка
 			if(balls[i].y-balls[i].radius*balls[i].size+balls[i].vY<0){
 				balls[i].vY=-balls[i].vY;		
 			}
+			//нижняя стенка +
 			if(balls[i].y>game.height-balls[i].radius*balls[i].size){
 				if(bonus.belay){
 					balls[i].vY=-balls[i].vY;
@@ -987,6 +1050,7 @@ function update() {
 					}					
 				}					
 			}
+			//ракетка
 			if(balls[i].x+balls[i].radius*balls[i].size>=player.x-bonus.visible && balls[i].x-balls[i].radius*balls[i].size<=player.x-bonus.visible+player.width*player.longPlatform && balls[i].y+balls[i].radius*balls[i].size>=player.y){				
 				if(start){
 					direction(i);
@@ -994,7 +1058,8 @@ function update() {
 				}
 			}
 			k=0;
-			for(j in cells){
+			for(j in cells){	
+				//припятствия
 				flagDel=false;
 				if(cells[j].value!=0){			
 					if(obstacle(i, j)){
@@ -1002,7 +1067,8 @@ function update() {
 							cells[j].value--;
 						}
 						flagDel=true;
-					}
+					}						
+					//выпадение бонуса
 					if(cells[j].value==0){
 						k=i;
 						selectBon(j);						
@@ -1017,16 +1083,19 @@ function update() {
 				}	
 			}	
 			checkBalls++;
+			//ускорение шарика
 			if(balls[i].kasaniy>4 && balls[i].speed<2.9){		
 					balls[i].speed+=0.2;
 					balls[i].kasaniy=0;
 			}
+			// меняем координаты шарика
 			balls[i].x =balls[i].x+( balls[i].vX*balls[i].speed);	
 			balls[i].y =balls[i].y+( balls[i].vY*balls[i].speed);
 		}
 	}
+	//расчЮты с пулЯми
 	hitPatr();	
-	for(i in bullets){
+	for(i in bullets){//движение пули
 		if(bullets[i].value!=0){
 			if(bullets[i].y<0){
 				bullets[i].value=0;
@@ -1034,6 +1103,7 @@ function update() {
 			bullets[i].y-=5*bonus.speed;
 		}
 	}
+	//падающие бонусы
 	for(i in bonMas){
 		if(bonMas[i].mode!=0){			
 			bonMas[i].y+=2*bonus.speed;
@@ -1043,6 +1113,7 @@ function update() {
 			writeBon(i);			
 		}
 	}
+	//ускарение стрельбы, пад. бонусов
 	if(start){
 		bonus.timeSpeed++;
 		if(bonus.timeSpeed>1000){
@@ -1050,6 +1121,7 @@ function update() {
 			bonus.speed+=0.2;
 		}
 	}
+	//стрельба
 	bonus.timerShot--;
 	if(bonus.timerShot<1 && bonus.ammunition>0){
 		canvas.onclick=creaturePatron;
@@ -1074,7 +1146,8 @@ function update() {
 }
 
 function draw() {	
-	game.draw();		
+	game.draw();//поле		
+	//прорисовка пистолетов на платформе
 	if(bonus.ammunition>0){		
 		if(bonus.ammunition<10){			
 			if(!window.pistol[0]){				
@@ -1093,49 +1166,63 @@ function draw() {
 			pistol[1].draw();
 		}
 	}	
+	//ролотсовка мЯчика
+	flagActivGame=false;
 	for(i in balls){
 		if(balls[i].activ==true){
 			balls[i].draw();	
-			player.draw();
+			flagActivGame=true;
 		}
 	}
+	//прорисовка платформы игрока
+	player.draw();
+	//прорисовка Ячеек
 	for(i in cells){
 		if(cells[i].value!=0){		
 			cells[i].draw();
 		}
 	}
+	//прорисовка падающих бонусов 
 	for(i in bonMas){		
 		if(bonMas[i].mode!=0){		
 			bonMas[i].draw();
 		}
 	}
+	//прорисовка пули
 	for(i in bullets){
 		if(bullets[i].value!=0){			
 			bullets[i].draw();
 		}		
 	}
-	player.draw();
+	player.draw(); //игрок
 	bonus.draw();
+	//mouse.size=balls[0].size;
+	//mouse.draw();	
 }
+
 
 function play() {
 	if(!endGame){
-		check(); 
-		position();
-		update();
-		draw();
+		check(); //проверка значений
+		screenPos();
+		speedPlatform();
+		update(); // обновляем координаты
+		draw(); // отрисовываем всё на холсте 
 	}else{
+		//draw(); // отрисовываем всё на холсте 
 		gameOver(bonus.flag);
 	}
     
 }
 
+//подсчЮт очков
 function score(weapon,cell){
 	bonus.score=bonus.score+cells[cell].score;
 	bonus.score=weapon==10 ? bonus.score+1 
 	: balls[weapon].speed==3 ? bonus.score+20 
 	: bonus.score+Math.floor(balls[weapon].speed)*3;
 }
+
 
 function startGame(){	
 	if(!start){
@@ -1144,6 +1231,7 @@ function startGame(){
 	}	
 }
 
+//остановка игры
 function stopGame(){
 	start=false;
 	balls[0].activ=true;
@@ -1169,6 +1257,7 @@ function stopGame(){
 	canvas.onclick =startGame;
 }
 
+//конец игры
 function gameOver(flag){
 	endGame=true;
 	if(flag){
@@ -1180,6 +1269,7 @@ function gameOver(flag){
 		context.font= 'bold 32px courier';
 		context.fillText("Victory", game.width/2, game.height/2+10);
 		context.fillText("Score: "+bonus.score, game.width/2, game.height/2+40);		
+		//context.globalAlpha = 1;
 		context.textAlign='start';			
 	}else{
 		context.font= 'bold 60px courier';
@@ -1190,24 +1280,53 @@ function gameOver(flag){
 		context.font= 'bold 32px courier';
 		context.fillText("Defeat", game.width/2, game.height/2+10);
 		context.fillText("Score: "+bonus.score, game.width/2, game.height/2+40);		
+		//context.globalAlpha = 1;
 		context.textAlign='start';
 		
 		
 	}
 }
-
+//Ячейки
 var cells=[];
+//шарики
 var balls=[];
+//пистолеты
 var pistol=[];
+//патроны
 bullets=[];
+//падающие бонусы
 bonMas=[];
 
-function init() {		
-	game = new Rect("#000", 0, 0, 640, 480);		
+function init() {
+	canvas = document.getElementById("arkanoid");
+    canvas.width = 640+100; // задаём ширину холста
+    canvas.height = 480; // задаём высоту холста
+    context = canvas.getContext('2d');	
+	// объект который задаёт игровое поле
+    game = new Rect("#000", 0, 0, canvas.width-100, canvas.height);		
+	//ракетка	
 	player = new Platform(game.width /2-40, game.height -15, 80, 10);
+	//бонусы
 	bonus= new Variables(false,3,0,false,0);	
 	
-	
+	//припятствия	
+	/*n=[
+	[1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1],
+	[0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0],
+	[1,1,1,1,1,0,10,10,0,10,10,1,1,1,1,1,1],
+	[1,1,3,1,1,3,1,1,3,1,1,3,1,1,3,1,1],
+	[2,2,1,2,2,1,2,2,1,2,2,1,2,2,1,2,2],
+	[-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+	[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
+	[0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
+	[0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0],
+	[0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0],
+	[0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
+	[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0]
+	];	*/
 	n=[
 	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 	[-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -1217,12 +1336,12 @@ function init() {
 	[-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 	[-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+	//[2,2,2,2,2,2,2,3,3,3,3,3,3,2,2,2,1,1,1,2]
 	];
 	nach=0;
 	bonus.widthCell=n[0].length;
 	bonus.heightCell=n.length;
 	nach=(game.width-n[0].length*40)/2;
-	bonus.x3=0;
 	bonus.x4=0;
 	bonus.x5=0;
 	bonus.visible=0;
@@ -1239,17 +1358,15 @@ function init() {
 		}
 	}	
 	player.x=game.width /2-40-bonus.visible;	
+	//шарик	
 	for(i=0;i<10;i++){
 		balls[i] = new Ball(game.width /2-10, game.height - 20, 0, 0, 5, 1, 1);
 	}
 	balls[0].activ=true;
+	//mouse=new Ball(game.width /2-10, game.height - 20, 0, 0, 5,1, 1);
 	start =false;
 	endGame=false;
-    canvas = document.getElementById("arkanoid");
-    canvas.width = game.width+100;
-    canvas.height = game.height; 
-    context = canvas.getContext('2d');
-	canvas.onmousemove = playerMove;
+	canvas.onmousemove = cursorPosit;
 	canvas.onclick =startGame;
 	setInterval(play, 1000 / 50);    
 }
