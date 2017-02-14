@@ -1,4 +1,4 @@
-//экран
+//СЌРєСЂР°РЅ
 function Rect(color, x, y, width, height) {
     this.color = color; 
     this.x = x; 
@@ -12,7 +12,7 @@ function Rect(color, x, y, width, height) {
     };
 }
 
-//платформа
+//РїР»Р°С‚С„РѕСЂРјР°
 function Platform(x, y, width, height) {	
     this.color = "#fff"; 
     this.x = x; 
@@ -27,17 +27,17 @@ function Platform(x, y, width, height) {
     };	
 }
 
-//позициЯ курсора
+//РїРѕР·РёС†РёРЇ РєСѓСЂСЃРѕСЂР°
 function cursorPosit(e) {
 	player.x2=e.pageX-7;
 	if(player.x2>640)
 		player.x2=640;
 }
 
-//подсчЮт позиции экрана
+//РїРѕРґСЃС‡Р®С‚ РїРѕР·РёС†РёРё СЌРєСЂР°РЅР°
 function screenPos(){
 	if(bonus.widthCell*40-game.width>0){		
-		if(player.x2<120){//сдвиг экрана влева
+		if(player.x2<120){//СЃРґРІРёРі СЌРєСЂР°РЅР° РІР»РµРІР°
 			if(bonus.visible<-(game.width-bonus.widthCell*40)/2){				
 				f=(120-player.x2)/200;
 				bonus.visible=(Math.floor((bonus.visible+f)*1000))/1000;
@@ -46,7 +46,7 @@ function screenPos(){
 				bonus.visible=-(game.width-bonus.widthCell*40)/2;				
 			}
 		}
-		if(player.x2>game.width-120){//сдвиг экрана вправо
+		if(player.x2>game.width-120){//СЃРґРІРёРі СЌРєСЂР°РЅР° РІРїСЂР°РІРѕ
 			if(bonus.visible>(game.width-bonus.widthCell*40)/2){
 				f=(game.width-120-player.x2)/200;
 				bonus.visible=(Math.floor((bonus.visible+f)*1000))/1000;
@@ -58,7 +58,7 @@ function screenPos(){
 	}	
 }
 
-//подсчЮт скорости платформы
+//РїРѕРґСЃС‡Р®С‚ СЃРєРѕСЂРѕСЃС‚Рё РїР»Р°С‚С„РѕСЂРјС‹
 function speedPlatform(){
 	if(player.x2<10){
 		player.x2=10;		
@@ -94,19 +94,19 @@ function speedPlatform(){
 	}	
 }
 
-//направление шарика после соприкосновениЯ с платформой
+//РЅР°РїСЂР°РІР»РµРЅРёРµ С€Р°СЂРёРєР° РїРѕСЃР»Рµ СЃРѕРїСЂРёРєРѕСЃРЅРѕРІРµРЅРёРЇ СЃ РїР»Р°С‚С„РѕСЂРјРѕР№
 function direction(i){	
 	dist=Math.round((balls[i].x-player.x+bonus.visible)*1000)/1000; 
-	//настройка места касание
-	//слева
+	//РЅР°СЃС‚СЂРѕР№РєР° РјРµСЃС‚Р° РєР°СЃР°РЅРёРµ
+	//СЃР»РµРІР°
 	if(dist<=0){
-		//бок
+		//Р±РѕРє
 		if(balls[i].y>=player.y && balls[i].y<=player.y+player.height){
 			if(balls[i].vX>0){
 				balls[i].vX=-balls[i].vX;
 			}		
 		}
-		//угол
+		//СѓРіРѕР»
 		dist2 =Math.sqrt(Math.pow(player.x-balls[i].x-bonus.visible,2)+Math.pow(player.y-balls[i].y,2));		
 		if(dist2-0.5<=balls[i].radius*balls[i].size){
 			if(balls[i].vX<=0){
@@ -124,15 +124,15 @@ function direction(i){
 		}		
 		return;
 	}
-	//справа
+	//СЃРїСЂР°РІР°
 	if(dist>=player.width*player.longPlatform){
-		//бок
+		//Р±РѕРє
 		if(balls[i].y>=player.y && balls[i].y<=player.y+player.height){
 			if(balls[i].vX<0){
 			balls[i].vX=-balls[i].vX;
 			}			
 		}
-		//угол
+		//СѓРіРѕР»
 		dist2=Math.sqrt(Math.pow(player.x+player.width*player.longPlatform-balls[i].x-bonus.visible,2)+Math.pow(player.y-balls[i].y,2));
 		if(dist2-0.5<=balls[i].radius*balls[i].size){
 			if(balls[i].vX>=0){
@@ -150,9 +150,9 @@ function direction(i){
 		}
 		return;
 	}
-	//настройка отражения
+	//РЅР°СЃС‚СЂРѕР№РєР° РѕС‚СЂР°Р¶РµРЅРёСЏ
 	if(balls[i].vY>=0){
-		//центр
+		//С†РµРЅС‚СЂ
 		if(dist>=player.width*player.longPlatform/2-1 && dist<=player.width*player.longPlatform/2+1){
 			balls[i].vX=0;
 			balls[i].vY=Math.round((-Math.sqrt(8))*1000)/1000;
@@ -160,7 +160,7 @@ function direction(i){
 				balls[0].vY=balls[0].vY;
 			return;
 		}
-		//леваЯ часть
+		//Р»РµРІР°РЇ С‡Р°СЃС‚СЊ
 		if(dist<player.width*player.longPlatform/2 && dist>0){			
 			dist2=Math.floor((player.width*player.longPlatform/2)-dist);			
 			balls[i].vX=-dist2/(player.width*player.longPlatform/2)*2830;
@@ -169,7 +169,7 @@ function direction(i){
 			balls[i].vY=Math.floor(balls[i].vY)/1000;
 			return;
 		}
-		//праваЯ часть
+		//РїСЂР°РІР°РЇ С‡Р°СЃС‚СЊ
 		if(dist>player.width*player.longPlatform/2){			
 			dist2=Math.floor(dist-player.width*player.longPlatform/2);
 			balls[i].vX=dist2/(player.width*player.longPlatform/2)*2830;
@@ -196,7 +196,7 @@ function Ball(x, y, vX, vY, radius, speed, size) {
 	this.through=false;   
     this.draw = function() 
     {
-		if(this.speed>2.9){//первращение в супер шар			
+		if(this.speed>2.9){//РїРµСЂРІСЂР°С‰РµРЅРёРµ РІ СЃСѓРїРµСЂ С€Р°СЂ			
 			if(this.size>0.8){
 				this.size-=0.001;
 			}
@@ -217,10 +217,10 @@ function directionBall(){
 //function explosion();
 
 function Cell(x, y, width, height, value, displacement){	
-	this.x = x; // координата х
-    this.y = y; // координата у	
-    this.width = width; // ширина
-    this.height = height; // высота
+	this.x = x; // РєРѕРѕСЂРґРёРЅР°С‚Р° С…
+    this.y = y; // РєРѕРѕСЂРґРёРЅР°С‚Р° Сѓ	
+    this.width = width; // С€РёСЂРёРЅР°
+    this.height = height; // РІС‹СЃРѕС‚Р°
 	this.value = value;
 	this.score=value==10 ? 30 : value*5;
 	this.displacement = displacement;
@@ -236,7 +236,7 @@ function Cell(x, y, width, height, value, displacement){
 			case 3:
 				context.fillStyle = '#888';
 				break
-			case 10://не ламается
+			case 10://РЅРµ Р»Р°РјР°РµС‚СЃСЏ
 				context.fillStyle = '#f00';
 				break
 		}	
@@ -244,7 +244,7 @@ function Cell(x, y, width, height, value, displacement){
 	};	
 }
 
-//Ќаправление после касаниЯ с Ячейкой
+//РЊР°РїСЂР°РІР»РµРЅРёРµ РїРѕСЃР»Рµ РєР°СЃР°РЅРёРЇ СЃ РЇС‡РµР№РєРѕР№
 function obstacle(i,j){ //to do			
 	if(balls[i].x+balls[i].radius*balls[i].size>=cells[j].x && balls[i].x-balls[i].radius<=cells[j].x+cells[j].width && balls[i].y+balls[i].radius*balls[i].size>=cells[j].y && balls[i].y-balls[i].radius*balls[i].size<=cells[j].y+cells[j].height){
 		if(balls[i].speed>2.9){
@@ -253,7 +253,7 @@ function obstacle(i,j){ //to do
 			return false;
 		}
 		dist= balls[i].x-cells[j].x;
-		//касание сверху или снизу
+		//РєР°СЃР°РЅРёРµ СЃРІРµСЂС…Сѓ РёР»Рё СЃРЅРёР·Сѓ
 		if(dist>=0 && dist<=cells[j].width){				
 			balls[i].vY=-balls[i].vY;				
 			return true;
@@ -325,7 +325,7 @@ function obstacle(i,j){ //to do
 				}
 			}
 		}
-		//касание слева 
+		//РєР°СЃР°РЅРёРµ СЃР»РµРІР° 
 		flag=true;
 		if(window.cells[+j-1]){
 			if(cells[+j-1].y==cells[j].y && cells[+j-1].value!=0){
@@ -333,7 +333,7 @@ function obstacle(i,j){ //to do
 			}
 		}
 		if(dist<0 && flag){
-			//бок
+			//Р±РѕРє
 			if(balls[i].y>=cells[j].y && balls[i].y<=cells[j].y+cells[j].height){					
 				if(balls[i].vX>0){
 					balls[i].vX=-balls[i].vX;
@@ -346,7 +346,7 @@ function obstacle(i,j){ //to do
 				}
 				return true;
 			}
-			//верхний угол			
+			//РІРµСЂС…РЅРёР№ СѓРіРѕР»			
 			if(upLeft){
 				dist2=Math.sqrt(Math.pow(cells[j].x-balls[i].x,2)+Math.pow(cells[j].y-balls[i].y,2));
 				if(dist2<=balls[i].radius*balls[i].size){
@@ -364,7 +364,7 @@ function obstacle(i,j){ //to do
 					return true;
 				}
 			}
-			//нижний угол
+			//РЅРёР¶РЅРёР№ СѓРіРѕР»
 			if(downLeft){
 				dist2=Math.sqrt(Math.pow(cells[j].x-balls[i].x,2)+Math.pow(cells[j].y+cells[j].height-balls[i].y,2));			
 				if(dist2<=balls[i].radius*balls[i].size){
@@ -389,9 +389,9 @@ function obstacle(i,j){ //to do
 			}			
 			return false;
 		}			
-		//касание справа
+		//РєР°СЃР°РЅРёРµ СЃРїСЂР°РІР°
 		if(dist>cells[j].width){
-			//бок
+			//Р±РѕРє
 			if(balls[i].y>=cells[j].y && balls[i].y<=cells[j].y+cells[j].height){
 				if(window.cells[+j+1]){
 					if(cells[+j+1].value!=0){
@@ -409,7 +409,7 @@ function obstacle(i,j){ //to do
 				}				
 				return true;
 			}
-			//верхний угол
+			//РІРµСЂС…РЅРёР№ СѓРіРѕР»
 			if(upRight){
 				dist2=Math.sqrt(Math.pow(cells[j].x+cells[j].width-balls[i].x,2)+Math.pow(cells[j].y-balls[i].y,2));
 				if(dist2<=balls[i].radius*balls[i].size){	
@@ -434,7 +434,7 @@ function obstacle(i,j){ //to do
 					return true;
 				}
 			}
-			//нижний угол
+			//РЅРёР¶РЅРёР№ СѓРіРѕР»
 			if(downRight){
 				dist2=Math.sqrt(Math.pow(cells[j].x+cells[j].width-balls[i].x,2)+Math.pow(cells[j].y+cells[j].height-balls[i].y,2));
 				if(dist2<=balls[i].radius*balls[i].size){				
@@ -483,7 +483,7 @@ function Patron(color,x, y, width, height, value) {
     };
 }
 
-//генерациЯ пули
+//РіРµРЅРµСЂР°С†РёРЇ РїСѓР»Рё
 function creaturePatron(){ 
 	if(bonus.ammunition>0){
 		if(bonus.ammunition<10){
@@ -546,7 +546,7 @@ function creaturePatron(){
 	}	
 }
 
-//попадание пулЯми
+//РїРѕРїР°РґР°РЅРёРµ РїСѓР»РЇРјРё
 function hitPatr(){ 
 	for(j in bullets){		
 	destruction=true;
@@ -572,10 +572,10 @@ function hitPatr(){
 
 function Variables(belay, life, ammunition, magnit, score){
 	this.color ="#ffd700";
-	this.belay=belay; //страховка
+	this.belay=belay; //СЃС‚СЂР°С…РѕРІРєР°
 	this.kasaniy=0;	
-	this.life = life; //кол-во жизней
-	this.ammunition = ammunition;//количество выстрелов
+	this.life = life; //РєРѕР»-РІРѕ Р¶РёР·РЅРµР№
+	this.ammunition = ammunition;//РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹СЃС‚СЂРµР»РѕРІ
 	this.score =score;
 	this.speed = 1;
 	this.timeSpeed=0;
@@ -619,7 +619,7 @@ function DownBonus(x,y,value, mode){
 	this.draw = function()
 	{
 		switch (this.mode){
-			case 1://длинна платформы
+			case 1://РґР»РёРЅРЅР° РїР»Р°С‚С„РѕСЂРјС‹
 				if(this.value<0){
 					context.fillStyle = '#00F';
 				}else{
@@ -627,12 +627,12 @@ function DownBonus(x,y,value, mode){
 				}
 				context.fillRect(this.x+bonus.visible, this.y, this.width,this.height);
 				break
-			//страховка +
+			//СЃС‚СЂР°С…РѕРІРєР° +
 			case 2:			
 				context.fillStyle = '#CF0';
 				context.fillRect(this.x+bonus.visible, this.y, this.width,this.height);
 				break		
-			//размер шарика	
+			//СЂР°Р·РјРµСЂ С€Р°СЂРёРєР°	
 			case 3:
 				context.fillStyle='#FFF';
 				context.beginPath();
@@ -647,12 +647,12 @@ function DownBonus(x,y,value, mode){
 				context.arc(this.x+bonus.visible, this.y, this.height/2, 0 * Math.PI, 360 * Math.PI, true);
 				context.fill();
 				break
-			//количество выстрелов
+			//РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹СЃС‚СЂРµР»РѕРІ
 			case 4:
 				context.fillStyle='#F60';
 				context.fillRect(this.x+bonus.visible, this.y, this.width,this.height);
 				break
-			//доп жизнь
+			//РґРѕРї Р¶РёР·РЅСЊ
 			case 5:	
 				context.fillStyle='#FFF';
 				context.beginPath();
@@ -663,7 +663,7 @@ function DownBonus(x,y,value, mode){
 				context.arc(this.x+bonus.visible, this.y, this.height/2, 0 * Math.PI, 360 * Math.PI, true);
 				context.fill();
 				break
-			//доп шарик
+			//РґРѕРї С€Р°СЂРёРє
 			case 6:
 				context.fillStyle='#aaa';
 				context.beginPath();
@@ -676,7 +676,7 @@ function DownBonus(x,y,value, mode){
 				context.fill();
 				context.globalAlpha = 1;
 				break
-			//камень
+			//РєР°РјРµРЅСЊ
 			case 7:
 				context.fillStyle='#888';
 				context.beginPath();
@@ -688,14 +688,14 @@ function DownBonus(x,y,value, mode){
 }
 
 function check(){
-	//длинна платформы
+	//РґР»РёРЅРЅР° РїР»Р°С‚С„РѕСЂРјС‹
 	if(player.longPlatform>1.5){
 		player.longPlatform=1.5;
 	}
 	if(player.longPlatform<0.5){
 		player.longPlatform=0.5;
 	}
-	//усткорение
+	//СѓСЃС‚РєРѕСЂРµРЅРёРµ
 	if(bonus.speed>3){
 		bonus.speed=3;
 	}
@@ -709,7 +709,7 @@ function check(){
 		if(balls[i].speed<0.5){
 			balls[i].speed=0.5;
 		}	
-		//размер шараика
+		//СЂР°Р·РјРµСЂ С€Р°СЂР°РёРєР°
 		if(balls[i].size>1.3){
 			balls[i].size=1.3;
 		}
@@ -717,14 +717,14 @@ function check(){
 			balls[i].size=0.8;
 		}
 	}
-	//кол-во жизней
+	//РєРѕР»-РІРѕ Р¶РёР·РЅРµР№
 	if(bonus.life>5){
 		bonus.life=5;
 	}
 	if(bonus.lift<-1){
 		bonus.life=-1;
 	}
-	//кол-во выстрелов
+	//РєРѕР»-РІРѕ РІС‹СЃС‚СЂРµР»РѕРІ
 	if(bonus.ammunition>15){
 		bonus.ammunition=15;
 	}
@@ -736,13 +736,13 @@ function check(){
 	}
 }
 probability=0;
-//выбор бонуса
+//РІС‹Р±РѕСЂ Р±РѕРЅСѓСЃР°
 function selectBon(j){	
 	f=Math.floor(Math.random()*100);
 	if(f>40-probability&& f<70){
 		probability=0;
 		valueBon=Math.floor(Math.random()*100);		
-		//длинна платформы +
+		//РґР»РёРЅРЅР° РїР»Р°С‚С„РѕСЂРјС‹ +
 		if(valueBon>-1 && valueBon<14){			
 			ots=Math.floor(Math.random()*100);
 			for(i in bonMas){
@@ -771,7 +771,7 @@ function selectBon(j){
 			}
 			return;
 		}
-		//страховка +
+		//СЃС‚СЂР°С…РѕРІРєР° +
 		if(valueBon>13 && valueBon<30){			
 			for(i in bonMas){
 				if(bonMas[i].mode==0){
@@ -788,7 +788,7 @@ function selectBon(j){
 			}
 			return;
 		}
-		//размер шарика +
+		//СЂР°Р·РјРµСЂ С€Р°СЂРёРєР° +
 		if(valueBon>29 && valueBon<44){
 			ots=Math.floor(Math.random()*100);		
 			for(i in bonMas){
@@ -817,7 +817,7 @@ function selectBon(j){
 			}
 			return;			
 		}
-		//количество выстрелов +
+		//РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹СЃС‚СЂРµР»РѕРІ +
 		if(valueBon>43 && valueBon<58){			
 			for(i in bonMas){
 				if(bonMas[i].mode==0){
@@ -834,7 +834,7 @@ function selectBon(j){
 			}
 			return;			
 		}
-		//доп жизнь +
+		//РґРѕРї Р¶РёР·РЅСЊ +
 		if(valueBon>57 && valueBon<72){
 			for(i in bonMas){
 				if(bonMas[i].mode==0){
@@ -851,7 +851,7 @@ function selectBon(j){
 			}
 			return;
 		}	
-		//доп шарик
+		//РґРѕРї С€Р°СЂРёРє
 		if(valueBon>71 && valueBon<86){			
 			for(i in bonMas){
 				if(bonMas[i].mode==0){
@@ -869,7 +869,7 @@ function selectBon(j){
 			return;
 			
 		}
-		//камень
+		//РєР°РјРµРЅСЊ
 		if(valueBon>85 && valueBon<100){
 			
 			for(i in bonMas){
@@ -888,10 +888,10 @@ function selectBon(j){
 			return;
 			
 		}
-		//взрывной шар
+		//РІР·СЂС‹РІРЅРѕР№ С€Р°СЂ
 		
-		//магнит
-		//камень
+		//РјР°РіРЅРёС‚
+		//РєР°РјРµРЅСЊ
 	}else{
 		if(probability<10){
 			 +probability++;
@@ -900,7 +900,7 @@ function selectBon(j){
 	}
 }
 
-//запись бонуса на счЮт играка
+//Р·Р°РїРёСЃСЊ Р±РѕРЅСѓСЃР° РЅР° СЃС‡Р®С‚ РёРіСЂР°РєР°
 function writeBon(i){
 	if(bonMas[i].x+bonMas[i].width>=player.x-bonus.visible &&
 	bonMas[i].x<=player.x-bonus.visible+player.width*player.longPlatform &&
@@ -908,7 +908,7 @@ function writeBon(i){
 	bonMas[i].y<=player.y+player.height){
 		switch (bonMas[i].mode){
 			case 1:
-				//длинна платформы 
+				//РґР»РёРЅРЅР° РїР»Р°С‚С„РѕСЂРјС‹ 
 				if(bonMas[i].value==1){
 					if(player.longPlatform<1.5){
 						player.x=player.x-player.width*0.5/2;
@@ -930,12 +930,12 @@ function writeBon(i){
 				bonMas[i].mode=0;
 				break
 			case 2:
-				//страховка				
+				//СЃС‚СЂР°С…РѕРІРєР°				
 				bonus.belay=true;				
 				bonMas[i].mode=0;
 				break
 			case 3:
-				//размер шара
+				//СЂР°Р·РјРµСЂ С€Р°СЂР°
 				for(j in balls){
 					if(balls[j].speed<3){
 						if(bonMas[i].value>0 && balls[j].size<1.3){
@@ -953,12 +953,12 @@ function writeBon(i){
 				bonMas[i].mode=0;
 				break
 			case 4:
-				//выстрелы
+				//РІС‹СЃС‚СЂРµР»С‹
 				bonus.ammunition+=3;
 				bonMas[i].mode=0;
 				break
 			case 5:
-				//доп жизнь
+				//РґРѕРї Р¶РёР·РЅСЊ
 				if(bonus.life<5){
 					bonus.life++;
 				}
@@ -1001,7 +1001,7 @@ function writeBon(i){
 				}
 				bonMas[i].mode=0;
 				break
-			case 7://камень
+			case 7://РєР°РјРµРЅСЊ
 				for(f in balls){
 					balls[f].activ=false;
 					bonus.activBal--;
@@ -1011,18 +1011,18 @@ function writeBon(i){
 	}
 }
 
-//обновление расчЮтов
+//РѕР±РЅРѕРІР»РµРЅРёРµ СЂР°СЃС‡Р®С‚РѕРІ
 function update() {	
 	if(!start){		
 		balls[0].x=player.x+player.width*player.longPlatform/2-bonus.visible; 
 		balls[0].y=player.y-balls[0].radius*balls[0].size;
 	}
 	checkBalls=0;
-	//рсчЮты с шариком
+	//СЂСЃС‡Р®С‚С‹ СЃ С€Р°СЂРёРєРѕРј
 	for(i in balls){
 		if(balls[i].activ){
 			if(bonus.widthCell*40>game.width){
-				//левая и правая стенка
+				//Р»РµРІР°СЏ Рё РїСЂР°РІР°СЏ СЃС‚РµРЅРєР°
 				if(balls[i].x-balls[i].radius*balls[i].size+balls[i].vX<(game.width-bonus.widthCell*40)/2){
 					balls[i].vX=-balls[i].vX;		
 				}
@@ -1034,11 +1034,11 @@ function update() {
 					balls[i].vX=-balls[i].vX;		
 				}
 			}		
-			//верхняя стенка
+			//РІРµСЂС…РЅСЏСЏ СЃС‚РµРЅРєР°
 			if(balls[i].y-balls[i].radius*balls[i].size+balls[i].vY<0){
 				balls[i].vY=-balls[i].vY;		
 			}
-			//нижняя стенка +
+			//РЅРёР¶РЅСЏСЏ СЃС‚РµРЅРєР° +
 			if(balls[i].y>game.height-balls[i].radius*balls[i].size){
 				if(bonus.belay){
 					balls[i].vY=-balls[i].vY;
@@ -1050,7 +1050,7 @@ function update() {
 					}					
 				}					
 			}
-			//ракетка
+			//СЂР°РєРµС‚РєР°
 			if(balls[i].x+balls[i].radius*balls[i].size>=player.x-bonus.visible && balls[i].x-balls[i].radius*balls[i].size<=player.x-bonus.visible+player.width*player.longPlatform && balls[i].y+balls[i].radius*balls[i].size>=player.y){				
 				if(start){
 					direction(i);
@@ -1059,7 +1059,7 @@ function update() {
 			}
 			k=0;
 			for(j in cells){	
-				//припятствия
+				//РїСЂРёРїСЏС‚СЃС‚РІРёСЏ
 				flagDel=false;
 				if(cells[j].value!=0){			
 					if(obstacle(i, j)){
@@ -1068,7 +1068,7 @@ function update() {
 						}
 						flagDel=true;
 					}						
-					//выпадение бонуса
+					//РІС‹РїР°РґРµРЅРёРµ Р±РѕРЅСѓСЃР°
 					if(cells[j].value==0){
 						k=i;
 						selectBon(j);						
@@ -1083,19 +1083,19 @@ function update() {
 				}	
 			}	
 			checkBalls++;
-			//ускорение шарика
+			//СѓСЃРєРѕСЂРµРЅРёРµ С€Р°СЂРёРєР°
 			if(balls[i].kasaniy>4 && balls[i].speed<2.9){		
 					balls[i].speed+=0.2;
 					balls[i].kasaniy=0;
 			}
-			// меняем координаты шарика
+			// РјРµРЅСЏРµРј РєРѕРѕСЂРґРёРЅР°С‚С‹ С€Р°СЂРёРєР°
 			balls[i].x =balls[i].x+( balls[i].vX*balls[i].speed);	
 			balls[i].y =balls[i].y+( balls[i].vY*balls[i].speed);
 		}
 	}
-	//расчЮты с пулЯми
+	//СЂР°СЃС‡Р®С‚С‹ СЃ РїСѓР»РЇРјРё
 	hitPatr();	
-	for(i in bullets){//движение пули
+	for(i in bullets){//РґРІРёР¶РµРЅРёРµ РїСѓР»Рё
 		if(bullets[i].value!=0){
 			if(bullets[i].y<0){
 				bullets[i].value=0;
@@ -1103,7 +1103,7 @@ function update() {
 			bullets[i].y-=5*bonus.speed;
 		}
 	}
-	//падающие бонусы
+	//РїР°РґР°СЋС‰РёРµ Р±РѕРЅСѓСЃС‹
 	for(i in bonMas){
 		if(bonMas[i].mode!=0){			
 			bonMas[i].y+=2*bonus.speed;
@@ -1113,7 +1113,7 @@ function update() {
 			writeBon(i);			
 		}
 	}
-	//ускарение стрельбы, пад. бонусов
+	//СѓСЃРєР°СЂРµРЅРёРµ СЃС‚СЂРµР»СЊР±С‹, РїР°Рґ. Р±РѕРЅСѓСЃРѕРІ
 	if(start){
 		bonus.timeSpeed++;
 		if(bonus.timeSpeed>1000){
@@ -1121,7 +1121,7 @@ function update() {
 			bonus.speed+=0.2;
 		}
 	}
-	//стрельба
+	//СЃС‚СЂРµР»СЊР±Р°
 	bonus.timerShot--;
 	if(bonus.timerShot<1 && bonus.ammunition>0){
 		canvas.onclick=creaturePatron;
@@ -1146,8 +1146,8 @@ function update() {
 }
 
 function draw() {	
-	game.draw();//поле		
-	//прорисовка пистолетов на платформе
+	game.draw();//РїРѕР»Рµ		
+	//РїСЂРѕСЂРёСЃРѕРІРєР° РїРёСЃС‚РѕР»РµС‚РѕРІ РЅР° РїР»Р°С‚С„РѕСЂРјРµ
 	if(bonus.ammunition>0){		
 		if(bonus.ammunition<10){			
 			if(!window.pistol[0]){				
@@ -1166,7 +1166,7 @@ function draw() {
 			pistol[1].draw();
 		}
 	}	
-	//ролотсовка мЯчика
+	//СЂРѕР»РѕС‚СЃРѕРІРєР° РјРЇС‡РёРєР°
 	flagActivGame=false;
 	for(i in balls){
 		if(balls[i].activ==true){
@@ -1174,27 +1174,27 @@ function draw() {
 			flagActivGame=true;
 		}
 	}
-	//прорисовка платформы игрока
+	//РїСЂРѕСЂРёСЃРѕРІРєР° РїР»Р°С‚С„РѕСЂРјС‹ РёРіСЂРѕРєР°
 	player.draw();
-	//прорисовка Ячеек
+	//РїСЂРѕСЂРёСЃРѕРІРєР° РЇС‡РµРµРє
 	for(i in cells){
 		if(cells[i].value!=0){		
 			cells[i].draw();
 		}
 	}
-	//прорисовка падающих бонусов 
+	//РїСЂРѕСЂРёСЃРѕРІРєР° РїР°РґР°СЋС‰РёС… Р±РѕРЅСѓСЃРѕРІ 
 	for(i in bonMas){		
 		if(bonMas[i].mode!=0){		
 			bonMas[i].draw();
 		}
 	}
-	//прорисовка пули
+	//РїСЂРѕСЂРёСЃРѕРІРєР° РїСѓР»Рё
 	for(i in bullets){
 		if(bullets[i].value!=0){			
 			bullets[i].draw();
 		}		
 	}
-	player.draw(); //игрок
+	player.draw(); //РёРіСЂРѕРє
 	bonus.draw();
 	//mouse.size=balls[0].size;
 	//mouse.draw();	
@@ -1203,19 +1203,19 @@ function draw() {
 
 function play() {
 	if(!endGame){
-		check(); //проверка значений
+		check(); //РїСЂРѕРІРµСЂРєР° Р·РЅР°С‡РµРЅРёР№
 		screenPos();
 		speedPlatform();
-		update(); // обновляем координаты
-		draw(); // отрисовываем всё на холсте 
+		update(); // РѕР±РЅРѕРІР»СЏРµРј РєРѕРѕСЂРґРёРЅР°С‚С‹
+		draw(); // РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј РІСЃС‘ РЅР° С…РѕР»СЃС‚Рµ 
 	}else{
-		//draw(); // отрисовываем всё на холсте 
+		//draw(); // РѕС‚СЂРёСЃРѕРІС‹РІР°РµРј РІСЃС‘ РЅР° С…РѕР»СЃС‚Рµ 
 		gameOver(bonus.flag);
 	}
     
 }
 
-//подсчЮт очков
+//РїРѕРґСЃС‡Р®С‚ РѕС‡РєРѕРІ
 function score(weapon,cell){
 	bonus.score=bonus.score+cells[cell].score;
 	bonus.score=weapon==10 ? bonus.score+1 
@@ -1231,7 +1231,7 @@ function startGame(){
 	}	
 }
 
-//остановка игры
+//РѕСЃС‚Р°РЅРѕРІРєР° РёРіСЂС‹
 function stopGame(){
 	start=false;
 	balls[0].activ=true;
@@ -1257,7 +1257,7 @@ function stopGame(){
 	canvas.onclick =startGame;
 }
 
-//конец игры
+//РєРѕРЅРµС† РёРіСЂС‹
 function gameOver(flag){
 	endGame=true;
 	if(flag){
@@ -1286,47 +1286,29 @@ function gameOver(flag){
 		
 	}
 }
-//Ячейки
+//РЇС‡РµР№РєРё
 var cells=[];
-//шарики
+//С€Р°СЂРёРєРё
 var balls=[];
-//пистолеты
+//РїРёСЃС‚РѕР»РµС‚С‹
 var pistol=[];
-//патроны
+//РїР°С‚СЂРѕРЅС‹
 bullets=[];
-//падающие бонусы
+//РїР°РґР°СЋС‰РёРµ Р±РѕРЅСѓСЃС‹
 bonMas=[];
 
 function init() {
 	canvas = document.getElementById("arkanoid");
-    canvas.width = 640+100; // задаём ширину холста
-    canvas.height = 480; // задаём высоту холста
+    canvas.width = 640+100; // Р·Р°РґР°С‘Рј С€РёСЂРёРЅСѓ С…РѕР»СЃС‚Р°
+    canvas.height = 480; // Р·Р°РґР°С‘Рј РІС‹СЃРѕС‚Сѓ С…РѕР»СЃС‚Р°
     context = canvas.getContext('2d');	
-	// объект который задаёт игровое поле
+	// РѕР±СЉРµРєС‚ РєРѕС‚РѕСЂС‹Р№ Р·Р°РґР°С‘С‚ РёРіСЂРѕРІРѕРµ РїРѕР»Рµ
     game = new Rect("#000", 0, 0, canvas.width-100, canvas.height);		
-	//ракетка	
+	//СЂР°РєРµС‚РєР°	
 	player = new Platform(game.width /2-40, game.height -15, 80, 10);
-	//бонусы
+	//Р±РѕРЅСѓСЃС‹
 	bonus= new Variables(false,3,0,false,0);	
-	
-	//припятствия	
-	/*n=[
-	[1,0,1,0,1,0,1,1,1,1,1,0,1,0,1,0,1],
-	[0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0],
-	[1,1,1,1,1,0,10,10,0,10,10,1,1,1,1,1,1],
-	[1,1,3,1,1,3,1,1,3,1,1,3,1,1,3,1,1],
-	[2,2,1,2,2,1,2,2,1,2,2,1,2,2,1,2,2],
-	[-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-	[-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-	[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
-	[0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0],
-	[0,0,0,1,1,1,1,1,1,1,1,1,1,1,0,0,0],
-	[0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0],
-	[0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0,0],
-	[0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0],
-	[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0]
-	];	*/
+	//РїСЂРёРїСЏС‚СЃС‚РІРёСЏ	
 	n=[
 	[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 	[-1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
@@ -1358,7 +1340,7 @@ function init() {
 		}
 	}	
 	player.x=game.width /2-40-bonus.visible;	
-	//шарик	
+	//С€Р°СЂРёРє	
 	for(i=0;i<10;i++){
 		balls[i] = new Ball(game.width /2-10, game.height - 20, 0, 0, 5, 1, 1);
 	}
