@@ -27,14 +27,14 @@ function Platform(x, y, width, height) {
     };	
 }
 
-//позициЯ курсора
+//позиция курсора
 function cursorPosit(e) {
 	player.x2=e.pageX-7;
 	if(player.x2>640)
 		player.x2=640;
 }
 
-//подсчЮт позиции экрана
+//подсчёт позиции экрана
 function screenPos(){
 	if(bonus.widthCell*40-game.width>0){		
 		if(player.x2<120){//сдвиг экрана влева
@@ -58,7 +58,7 @@ function screenPos(){
 	}	
 }
 
-//подсчЮт скорости платформы
+//подсчёт скорости платформы
 function speedPlatform(){
 	if(player.x2<10){
 		player.x2=10;		
@@ -94,7 +94,7 @@ function speedPlatform(){
 	}	
 }
 
-//направление шарика после соприкосновениЯ с платформой
+//направление шарика после соприкосновения с платформой
 function direction(i){	
 	dist=Math.round((balls[i].x-player.x+bonus.visible)*1000)/1000; 
 	//настройка места касание
@@ -160,7 +160,7 @@ function direction(i){
 				balls[0].vY=balls[0].vY;
 			return;
 		}
-		//леваЯ часть
+		//левая часть
 		if(dist<player.width*player.longPlatform/2 && dist>0){			
 			dist2=Math.floor((player.width*player.longPlatform/2)-dist);			
 			balls[i].vX=-dist2/(player.width*player.longPlatform/2)*2830;
@@ -169,7 +169,7 @@ function direction(i){
 			balls[i].vY=Math.floor(balls[i].vY)/1000;
 			return;
 		}
-		//праваЯ часть
+		//правая часть
 		if(dist>player.width*player.longPlatform/2){			
 			dist2=Math.floor(dist-player.width*player.longPlatform/2);
 			balls[i].vX=dist2/(player.width*player.longPlatform/2)*2830;
@@ -196,7 +196,7 @@ function Ball(x, y, vX, vY, radius, speed, size) {
 	this.through=false;   
     this.draw = function() 
     {
-		if(this.speed>2.9){//первращение в супер шар			
+		if(this.speed>2.9){//превращение в супер шар			
 			if(this.size>0.8){
 				this.size-=0.001;
 			}
@@ -244,7 +244,7 @@ function Cell(x, y, width, height, value, displacement){
 	};	
 }
 
-//Ќаправление после касаниЯ с Ячейкой
+//Направление после касания с ячейкой
 function obstacle(i,j){ //to do			
 	if(balls[i].x+balls[i].radius*balls[i].size>=cells[j].x && balls[i].x-balls[i].radius<=cells[j].x+cells[j].width && balls[i].y+balls[i].radius*balls[i].size>=cells[j].y && balls[i].y-balls[i].radius*balls[i].size<=cells[j].y+cells[j].height){
 		if(balls[i].speed>2.9){
@@ -483,7 +483,7 @@ function Patron(color,x, y, width, height, value) {
     };
 }
 
-//генерациЯ пули
+//генерация пули
 function creaturePatron(){ 
 	if(bonus.ammunition>0){
 		if(bonus.ammunition<10){
@@ -546,7 +546,7 @@ function creaturePatron(){
 	}	
 }
 
-//попадание пулЯми
+//попадание пулями
 function hitPatr(){ 
 	for(j in bullets){		
 	destruction=true;
@@ -900,7 +900,7 @@ function selectBon(j){
 	}
 }
 
-//запись бонуса на счЮт играка
+//запись бонуса на счёт играка
 function writeBon(i){
 	if(bonMas[i].x+bonMas[i].width>=player.x-bonus.visible &&
 	bonMas[i].x<=player.x-bonus.visible+player.width*player.longPlatform &&
@@ -1011,7 +1011,7 @@ function writeBon(i){
 	}
 }
 
-//обновление расчЮтов
+//обновление расчётов
 function update() {	
 	if(!start){		
 		balls[0].x=player.x+player.width*player.longPlatform/2-bonus.visible; 
@@ -1093,7 +1093,7 @@ function update() {
 			balls[i].y =balls[i].y+( balls[i].vY*balls[i].speed);
 		}
 	}
-	//расчЮты с пулЯми
+	//расчёты с пулями
 	hitPatr();	
 	for(i in bullets){//движение пули
 		if(bullets[i].value!=0){
